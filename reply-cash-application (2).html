@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regional Growth Leader Application | reply.cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            padding: 40px 30px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .step.completed {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-group:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .skills-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-question {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h4 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .country-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .country-option {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .country-option:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .country-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Join reply.cash</h1>
+            <p>Become a Regional Growth Leader and help bring fast, secure payments to your region</p>
+            <p style="margin-top: 15px; font-size: 1.2em; font-weight: 600;">💰 Earn $200 USD/month | 30 hours commitment</p>
+        </div>
+
+        <div class="form-section">
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+                <div class="step" id="step4">4</div>
+                <div class="step" id="step5">5</div>
+            </div>
+
+            <form id="applicationForm">
+                <!-- Page 1: Understanding -->
+                <div class="page active" id="page1">
+                    <h2 style="margin-bottom: 20px;">Your Understanding of reply.cash</h2>
+                    
+                    <div class="info-box">
+                        <strong>About reply.cash:</strong> We're building the fastest, most private way to send and receive money globally using stablecoins and local payment rails.
+                    </div>
+
+                    <div class="form-group">
+                        <label>In your own words, describe what reply.cash does and why it matters <span class="required">*</span></label>
+                        <textarea name="understanding" required placeholder="Explain the impact reply.cash can have in your region..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What payment pain points exist in your region that reply.cash could solve? <span class="required">*</span></label>
+                        <textarea name="painPoints" required placeholder="Describe the challenges people face with current payment systems..."></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-primary" onclick="nextPage(2)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Page 2: Basic Information -->
+                <div class="page" id="page2">
+                    <h2 style="margin-bottom: 20px;">Your Information</h2>
+
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" name="fullName" required placeholder="Your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number (with country code) <span class="required">*</span></label>
+                        <input type="text" name="phone" required placeholder="+1234567890">
+                    </div>
+
+                    <div class="form-group">
+                        <label>LinkedIn Profile URL</label>
+                        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Portfolio/Website (if applicable)</label>
+                        <input type="url" name="portfolio" placeholder="https://yourwebsite.com">
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousPage(1)">← Back</button>
+                        <button type="button" class="btn-primary" onclick="nextPage(3)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Page 3: Region Selection -->
+                <div class="page" id="page3">
+                    <h2 style="margin-bottom: 20px;">Target Region</h2>
+
+                    <div class="form-group">
+                        <label>Select the country/region you want to lead growth in <span class="required">*</span></label>
+                        <p class="hint">We prioritize countries with strong mobile money rails and market potential</p>
+                        
+                        <select name="country" required onchange="updateRegionInfo(this.value)">
+                            <option value="">-- Select a country --</option>
+                            <optgroup label="🌍 West Africa (Priority)">
+                                <option value="Nigeria">🇳🇬 Nigeria (NGN)</option>
+                                <option value="Ghana">🇬🇭 Ghana (GHS)</option>
+                                <option value="Cameroon">🇨🇲 Cameroon (XAF)</option>
+                                <option value="Senegal">🇸🇳 Senegal (XOF)</option>
+                                <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire (XOF)</option>
+                                <option value="Benin">🇧🇯 Benin (XOF)</option>
+                                <option value="Burkina Faso">🇧🇫 Burkina Faso (XOF)</option>
+                                <option value="Mali">🇲🇱 Mali (XOF)</option>
+                                <option value="Sierra Leone">🇸🇱 Sierra Leone (SLE)</option>
+                            </optgroup>
+                            <optgroup label="🌍 East Africa (Priority)">
+                                <option value="Kenya">🇰🇪 Kenya (KES)</option>
+                                <option value="Uganda">🇺🇬 Uganda (UGX)</option>
+                                <option value="Tanzania">🇹🇿 Tanzania (TZS)</option>
+                                <option value="Rwanda">🇷🇼 Rwanda (RWF)</option>
+                            </optgroup>
+                            <optgroup label="🌍 Central Africa">
+                                <option value="Congo">🇨🇩 Congo (CDF)</option>
+                            </optgroup>
+                            <optgroup label="🌍 Southern Africa">
+                                <option value="South Africa">🇿🇦 South Africa (ZAR)</option>
+                                <option value="Zambia">🇿🇲 Zambia (ZMW)</option>
+                                <option value="Malawi">🇲🇼 Malawi (MWK)</option>
+                                <option value="Botswana">🇧🇼 Botswana (BWP)</option>
+                            </optgroup>
+                            <optgroup label="🌍 North Africa">
+                                <option value="Morocco">🇲🇦 Morocco (MAD)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div id="regionInfo" style="display: none;" class="info-box">
+                        <strong>Coverage for this region:</strong> <span id="coverageInfo"></span>
+                    </div>
+
+                    <div id="salaryInfo" style="display: none;" class="info-box" style="background: #d1fae5; border-left-color: #10b981;">
+                        <strong>💰 Monthly Compensation:</strong> $200 USD ≈ <span id="localSalary" style="font-weight: bold; color: #059669;"></span>
+                        <br><small style="color: #666; margin-top: 5px; display: block;">Exchange rates updated in real-time</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Why are you the right person to lead growth in this region? <span class="required">*</span></label>
+                        <textarea name="whyYou" required placeholder="Describe your connections, experience, and understanding of this market..."></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousPage(2)">← Back</button>
+                        <button type="button" class="btn-primary" onclick="nextPage(4)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Page 4: Skills Assessment -->
+                <div class="page" id="page4">
+                    <h2 style="margin-bottom: 20px;">Skills & Experience Assessment</h2>
+
+                    <div class="form-group">
+                        <label>Please check all that apply to you <span class="required">*</span></label>
+                        <div class="skills-grid">
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="stable_internet" id="skill1" required>
+                                <label for="skill1">I have stable internet connection</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="computer" id="skill2">
+                                <label for="skill2">I have a computer for daily work</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="product_testing" id="skill3">
+                                <label for="skill3">Experience as a product tester/user researcher</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="local_money_rails" id="skill4">
+                                <label for="skill4">Access to local mobile money/payment rails</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="community" id="skill5">
+                                <label for="skill5">Close friends/communities for testing & feedback</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="ai_tools" id="skill6">
+                                <label for="skill6">Comfortable using AI tools</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="crypto" id="skill7">
+                                <label for="skill7">Understanding of cryptocurrency & blockchain</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="stablecoins" id="skill8">
+                                <label for="skill8">Knowledge of stablecoins & fintech payments</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="automation" id="skill9">
+                                <label for="skill9">Experience with automation & growth tools</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="skills" value="community_building" id="skill10">
+                                <label for="skill10">Track record building engaged communities</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>Quick Knowledge Check</h4>
+                        
+                        <p style="margin-bottom: 10px;"><strong>1. What is a stablecoin?</strong></p>
+                        <div class="radio-option">
+                            <input type="radio" name="q1" value="a" id="q1a" required>
+                            <label for="q1a">A cryptocurrency designed to maintain a stable value (usually pegged to USD)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="q1" value="b" id="q1b">
+                            <label for="q1b">A type of bank account</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="q1" value="c" id="q1c">
+                            <label for="q1c">A volatile cryptocurrency like Bitcoin</label>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <p style="margin-bottom: 10px;"><strong>2. What is your experience level with product launches?</strong></p>
+                        <div class="radio-option">
+                            <input type="radio" name="q2" value="a" id="q2a" required>
+                            <label for="q2a">I've successfully launched products/services before</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="q2" value="b" id="q2b">
+                            <label for="q2b">I've been part of launch teams</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="q2" value="c" id="q2c">
+                            <label for="q2c">This would be my first product launch</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Describe a time you drove user adoption for a product or service <span class="required">*</span></label>
+                        <textarea name="adoptionExperience" required placeholder="Share a specific example..."></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousPage(3)">← Back</button>
+                        <button type="button" class="btn-primary" onclick="nextPage(5)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Page 5: Final Questions -->
+                <div class="page" id="page5">
+                    <h2 style="margin-bottom: 20px;">Final Questions</h2>
+
+                    <div class="form-group">
+                        <label>What's your proposed growth strategy for reply.cash in your region? <span class="required">*</span></label>
+                        <textarea name="strategy" required placeholder="Outline your approach to driving adoption..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Who are the ideal first customers for reply.cash in your market? <span class="required">*</span></label>
+                        <textarea name="targetPersonas" required placeholder="Describe the customer personas you'd target..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What channels will you use to reach users? <span class="required">*</span></label>
+                        <textarea name="channels" required placeholder="List your distribution channels and tactics..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>When can you start? <span class="required">*</span></label>
+                        <select name="startDate" required>
+                            <option value="">-- Select --</option>
+                            <option value="immediately">Immediately</option>
+                            <option value="1-2weeks">Within 1-2 weeks</option>
+                            <option value="1month">Within 1 month</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>💼 Compensation & Commitment:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px; color: #333;">
+                            <li><strong>$200 USD per month</strong> (paid in stablecoins or local currency)</li>
+                            <li><strong>30 hours per month</strong> dedicated to growth initiatives</li>
+                            <li>Flexible schedule, remote work</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="commitment" required style="width: auto; margin-right: 10px;">
+                            I understand and can commit to 30 hours/month for $200 USD per month <span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousPage(4)">← Back</button>
+                        <button type="submit" class="btn-primary">Submit Application 🚀</button>
+                    </div>
+                </div>
+
+                <!-- Success Page -->
+                <div class="page" id="pageSuccess">
+                    <div class="success-message">
+                        <div class="success-icon">✅</div>
+                        <h2 style="margin-bottom: 15px;">Application Submitted!</h2>
+                        <p style="margin-bottom: 20px; color: #666;">Thank you for your interest in becoming a Regional Growth Leader for reply.cash.</p>
+                        <p style="color: #666;">We'll review your application and reach out to qualified candidates within 5-7 business days to schedule an interview.</p>
+                        <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                            <strong>Next Steps:</strong>
+                            <ul style="text-align: left; margin-top: 10px; margin-left: 20px; color: #666;">
+                                <li>Check your email for confirmation</li>
+                                <li>Join our community (link in email)</li>
+                                <li>Learn more at <a href="https://www.reply.cash" target="_blank" style="color: #667eea;">reply.cash</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+
+        function nextPage(page) {
+            // Validate current page before moving
+            const currentPageEl = document.getElementById('page' + currentPage);
+            const inputs = currentPageEl.querySelectorAll('[required]');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    input.reportValidity();
+                }
+            });
+
+            if (!valid) return;
+
+            // Update pages
+            document.getElementById('page' + currentPage).classList.remove('active');
+            document.getElementById('page' + page).classList.add('active');
+
+            // Update steps
+            document.getElementById('step' + currentPage).classList.add('completed');
+            document.getElementById('step' + currentPage).classList.remove('active');
+            document.getElementById('step' + page).classList.add('active');
+
+            currentPage = page;
+            window.scrollTo(0, 0);
+        }
+
+        function previousPage(page) {
+            document.getElementById('page' + currentPage).classList.remove('active');
+            document.getElementById('page' + page).classList.add('active');
+
+            document.getElementById('step' + currentPage).classList.remove('active');
+            document.getElementById('step' + page).classList.add('active');
+            if (currentPage < 6) {
+                document.getElementById('step' + currentPage).classList.remove('completed');
+            }
+
+            currentPage = page;
+            window.scrollTo(0, 0);
+        }
+
+        function updateRegionInfo(country) {
+            const regionInfo = document.getElementById('regionInfo');
+            const coverageInfo = document.getElementById('coverageInfo');
+            const salaryInfo = document.getElementById('salaryInfo');
+            const localSalary = document.getElementById('localSalary');
+            
+            const coverage = {
+                'Nigeria': 'Cashwyre + Pretium (Full Coverage)',
+                'Ghana': 'Cashwyre + Pretium (Full Coverage)',
+                'Kenya': 'Cashwyre + Pretium (Full Coverage)',
+                'Uganda': 'Cashwyre + Pretium (Full Coverage)',
+                'Cameroon': 'Cashwyre',
+                'Malawi': 'Cashwyre + Pretium',
+                'Congo': 'Cashwyre + Pretium',
+                'South Africa': 'Cashwyre (Offramp $1 + 2.5%)',
+                'Tanzania': 'Cashwyre',
+                'Rwanda': 'Cashwyre',
+                'Senegal': 'Cashwyre',
+                'Côte d\'Ivoire': 'Cashwyre',
+                'Benin': 'Cashwyre',
+                'Burkina Faso': 'Cashwyre',
+                'Mali': 'Cashwyre',
+                'Sierra Leone': 'Cashwyre',
+                'Zambia': 'Cashwyre',
+                'Botswana': 'Cashwyre',
+                'Morocco': 'Cashwyre'
+            };
+
+            const currencyCodes = {
+                'Nigeria': 'NGN',
+                'Ghana': 'GHS',
+                'Kenya': 'KES',
+                'Uganda': 'UGX',
+                'Cameroon': 'XAF',
+                'Malawi': 'MWK',
+                'Congo': 'CDF',
+                'South Africa': 'ZAR',
+                'Tanzania': 'TZS',
+                'Rwanda': 'RWF',
+                'Senegal': 'XOF',
+                'Côte d\'Ivoire': 'XOF',
+                'Benin': 'XOF',
+                'Burkina Faso': 'XOF',
+                'Mali': 'XOF',
+                'Sierra Leone': 'SLE',
+                'Zambia': 'ZMW',
+                'Botswana': 'BWP',
+                'Morocco': 'MAD'
+            };
+
+            if (country && coverage[country]) {
+                coverageInfo.textContent = coverage[country];
+                regionInfo.style.display = 'block';
+                
+                // Fetch and display salary conversion
+                const currencyCode = currencyCodes[country];
+                if (currencyCode) {
+                    salaryInfo.style.display = 'block';
+                    localSalary.innerHTML = '<em style="color: #666;">Loading...</em>';
+                    
+                    // Fetch real-time exchange rate
+                    fetch(`https://api.exchangerate-api.com/v4/latest/USD`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const rate = data.rates[currencyCode];
+                            if (rate) {
+                                const localAmount = (200 * rate).toLocaleString('en-US', {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0
+                                });
+                                localSalary.textContent = `${localAmount} ${currencyCode}`;
+                            } else {
+                                localSalary.textContent = 'Rate unavailable';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching exchange rate:', error);
+                            localSalary.textContent = 'Unable to fetch rate';
+                        });
+                }
+            } else {
+                regionInfo.style.display = 'none';
+                salaryInfo.style.display = 'none';
+            }
+        }
+
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(e.target);
+            const data = {};
+            
+            // Handle checkboxes specially
+            const skills = [];
+            formData.getAll('skills').forEach(skill => skills.push(skill));
+            
+            formData.forEach((value, key) => {
+                if (key !== 'skills') {
+                    data[key] = value;
+                }
+            });
+            data['skills'] = skills;
+
+            // In a real implementation, this would send to Notion API or a backend
+            console.log('Application Data:', data);
+            
+            // Show success page
+            document.getElementById('page5').classList.remove('active');
+            document.getElementById('pageSuccess').classList.add('active');
+            document.getElementById('step5').classList.add('completed');
+            
+            // Here you would integrate with Notion API
+            // Example: sendToNotion(data);
+            
+            window.scrollTo(0, 0);
+        });
+
+        // Notion Integration Function (placeholder)
+        function sendToNotion(data) {
+            // This would connect to your Notion database
+            // You'll need to set up a backend endpoint or use Notion's API directly
+            // Example structure for Notion:
+            /*
+            const notionData = {
+                parent: { database_id: "YOUR_DATABASE_ID" },
+                properties: {
+                    "Name": { title: [{ text: { content: data.fullName } }] },
+                    "Email": { email: data.email },
+                    "Country": { select: { name: data.country } },
+                    // ... map other fields
+                }
+            };
+            */
+        }
+    </script>
+</body>
+</html>
